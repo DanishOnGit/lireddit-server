@@ -12,6 +12,17 @@ const type_graphql_1 = require("type-graphql");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
+const express_session_1 = __importDefault(require("express-session"));
+const connect_redis_1 = __importDefault(require("connect-redis"));
+const redis_1 = __importDefault(require("redis"));
+const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
+const redisClient = redis_1.default.createClient();
+app.use((0, express_session_1.default)({
+    store: new RedisStore({ client: redisClient }),
+    saveUninitialized: false,
+    secret: "keyboard cat",
+    resave: false,
+}));
 const main = async () => {
     const orm = await core_1.MikroORM.init(mikro_orm_config_1.default);
     await orm.getMigrator().up();
